@@ -2,6 +2,14 @@
 
 FastAPI-powered service that ingests multi-page medical bills (PDFs or images), runs OCR + document understanding to extract structured line items, and returns the schema mandated by the HackRx Datathon submission guidelines. The pipeline is designed to maximise accuracy while remaining fully modular so that stronger OCR or LLM summarizers can be swapped in without touching the HTTP layer.
 
+## 🌐 Live Deployment
+
+**Deployed API**: [View Deployment Guide](DEPLOYMENT.md)
+
+The API can be deployed for free on platforms like Render, Railway, or Fly.io. See [DEPLOYMENT.md](DEPLOYMENT.md) for step-by-step instructions.
+
+**Quick Deploy**: Connect your GitHub repo to [Render](https://render.com) and it will auto-deploy!
+
 ## 🎯 Problem Context
 
 Bajaj Health processes thousands of OPD/IPD claims a day and needs to "pay right" by digitising invoices accurately. Each file can have 30–40 scanned pages, with a mix of tabular and free-form sections. The API exposed by this repository mirrors the published Postman collection and expects a public `document` URL pointing at the source file.
@@ -350,9 +358,33 @@ uvicorn bill_extraction_api.app.main:app --reload --host 0.0.0.0 --port 8001
 - ✅ **API Documentation**: Auto-generated Swagger/ReDoc docs
 - ✅ **Token Usage Tracking**: For LLM-based parsing
 
+## 🚀 Deployment
+
+### Free Deployment Options
+
+The API can be deployed for free on several platforms. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+
+**Recommended: Render (Easiest)**
+1. Sign up at https://render.com (free, no credit card needed)
+2. Connect your GitHub repository
+3. Create new Web Service
+4. Use these settings:
+   - **Build Command**: `pip install --upgrade pip && pip install -e . && pip install -r requirements.txt`
+   - **Start Command**: `uvicorn bill_extraction_api.app.main:app --host 0.0.0.0 --port $PORT`
+   - **Plan**: Free
+5. Deploy! Your API will be live at `https://your-app.onrender.com`
+
+**Alternative Platforms:**
+- **Railway**: https://railway.app ($5 free credit/month)
+- **Fly.io**: https://fly.io (generous free tier)
+- **Docker**: Use included `Dockerfile` for any container platform
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for complete deployment guide with all options.
+
 ## 📚 Additional Resources
 
 - **LLM Setup Guide**: See [LLM_SETUP.md](LLM_SETUP.md) for configuring OpenAI/Anthropic
+- **Deployment Guide**: See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment instructions
 - **API Documentation**: http://localhost:8000/docs (when server is running)
 - **FastAPI Documentation**: https://fastapi.tiangolo.com/
 

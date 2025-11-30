@@ -1,0 +1,18 @@
+# Render configuration file
+# This file makes deployment even easier - just connect your repo and Render uses this config
+
+services:
+  - type: web
+    name: bill-extraction-api
+    runtime: python
+    plan: free  # Use free tier
+    buildCommand: pip install --upgrade pip && pip install -e . && pip install -r requirements.txt
+    startCommand: uvicorn bill_extraction_api.app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      # Add your environment variables here if needed
+      # - key: BILL_API_PARSER_BACKEND
+      #   value: regex
+    healthCheckPath: /docs
+

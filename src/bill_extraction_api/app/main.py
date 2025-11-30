@@ -42,3 +42,31 @@ async def extract_bill_data(
         error_detail = str(exc)
         logger.error(f"Extraction failed: {error_detail}\n{traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Extraction failed: {error_detail}") from exc
+
+
+@app.post("/api/v1/hackrx/run", response_model=ExtractionResponse)
+async def hackrx_webhook(
+    payload: ExtractionRequest, service: ExtractionService = Depends(get_service)
+) -> ExtractionResponse:
+    """
+    Webhook endpoint for HackRx platform.
+    Accepts the same request format as /extract-bill-data and returns structured bill data.
+    """
+    try:
+        logger.info(f"HackRx webhook called with document: {payload.document}")
+        data = await service.extract(str(payload.document))
+        token_usage_dict = service.get_token_usage()
+        token_usage = TokenUsage.from_dict(token_usage_dict)
+        return ExtractionResponse(
+            is_success=True,
+            data=data,
+            token_usage=token_usage,
+        )
+    except ValueError as exc:
+        logger.error(f"HackRx webhook validation error: {exc}")
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:  # pragma: no cover - defensive path
+        import traceback
+        error_detail = str(exc)
+        logger.error(f"HackRx webhook failed: {error_detail}\n{traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=f"Extraction failed: {error_detail}") from exc

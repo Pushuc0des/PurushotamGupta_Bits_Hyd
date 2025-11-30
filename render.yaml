@@ -6,7 +6,7 @@ services:
     name: bill-extraction-api
     runtime: python
     plan: free  # Use free tier
-    buildCommand: pip install --upgrade pip && pip install -e . && pip install -r requirements.txt
+    buildCommand: apt-get update && apt-get install -y -q poppler-utils libglib2.0-0 libgl1 || echo "System deps may fail, continuing..." && pip install --upgrade pip && pip install -e . && pip install -r requirements.txt
     startCommand: uvicorn bill_extraction_api.app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
